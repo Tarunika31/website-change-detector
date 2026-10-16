@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}History — {{ page.name }}{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('index') }}">← Back to dashboard</a>
+<section class="hero compact"><div><p class="eyebrow">VERSION TIMELINE</p><h1>{{ page.name }}</h1><p class="hero-copy">{{ page.url }}</p></div><div class="hero-stat"><strong>{{ snaps|length }}</strong><span>Saved snapshots</span></div></section>
+<section class="panel"><div class="section-heading inside"><div><h2>Saved versions</h2><p class="muted">A new version is stored only when normalized content changes.</p></div></div>
+{% for s in snaps %}<div class="snapshot"><div><span class="snapshot-number">V{{ snaps|length - loop.index0 }}</span><b>{{ s.checked_at }}</b><p>{{ s.change_summary or 'Snapshot saved' }}</p></div>{% if not loop.last %}<a class="secondary small" href="{{ url_for('compare', old_id=snaps[loop.index].id, new_id=s.id) }}">Compare with previous</a>{% endif %}</div>
+{% else %}<p class="muted">No snapshots yet. Return to the dashboard and click “Check now”.</p>{% endfor %}
+</section>
+<section class="panel"><div class="section-heading inside"><div><h2>Events</h2></div></div>
+{% for e in events %}<div class="event-row"><span class="event-dot {{ e.event_type }}"></span><div class="event-body"><b>{{ e.event_type|upper }}</b><p>{{ e.message }}</p><small>{{ e.created_at }}</small></div></div>{% else %}<p class="muted">No events recorded.</p>{% endfor %}
+</section>
+{% endblock %}
